@@ -63,13 +63,15 @@ class Sonos(AudioNetwork):
         self.coordinator = None
 
         # Init an active speaker
-        devices = soco.discover()
-        for device in devices:
-            info = device.get_current_transport_info()
-            # TODO (wfk) check if there are more than one then find the
-            # coordinator
-            if info['current_transport_state'] == 'PLAYING':
-                self.coordinator = device
+        if devices is not None:
+            for device in devices:
+                info = device.get_current_transport_info()
+                if info['current_transport_state'] == 'PLAYING':
+                    self.coordinator = device
+                    break  # Exit the loop once a playing device is found
+        else:
+            # Handle the case where no devices are discovered
+            print("No Sonos devices found. Please check your network.")
 
     def get_ip_addr(self):
         # TODO (wfk) do the devices use mDNS? If so we can just use our hostname.
