@@ -63,6 +63,7 @@ class Sonos(AudioNetwork):
         self.coordinator = None
 
         # Init an active speaker
+        devices = soco.discover()
         if devices is not None:
             for device in devices:
                 info = device.get_current_transport_info()
